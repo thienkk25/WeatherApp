@@ -11,7 +11,6 @@ dependencies:
   flutter_dotenv: ^5.2.1
   shimmer: ^3.0.0
   lottie: ^3.2.0
-  flutter_animate: ^4.5.2
   geolocator: ^14.0.2
 dev_dependencies:
   flutter_test:
