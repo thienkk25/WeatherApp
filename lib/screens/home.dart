@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:weather_app/controllers/weather_contronller.dart';
 
@@ -70,8 +69,8 @@ class _HomeState extends State<Home> {
 
     position =
         await Geolocator.getCurrentPosition(locationSettings: locationSettings);
-    // dataWeather = await weatherContronller.getWeathData(
-    //     position!.latitude, position!.longitude);
+    dataWeather = await weatherContronller.getWeathData(
+        position!.latitude, position!.longitude);
     setState(() {});
   }
 
@@ -127,6 +126,11 @@ class _HomeState extends State<Home> {
           : Center(
               child: Column(
                 children: [
+                  Shimmer(
+                    gradient: LinearGradient(
+                        colors: [Colors.grey.shade300, Colors.grey.shade600]),
+                    child: const Text("Loading..."),
+                  ),
                   Shimmer.fromColors(
                     baseColor: Colors.grey.shade300,
                     highlightColor: Colors.grey.shade100,
@@ -165,8 +169,8 @@ class _HomeState extends State<Home> {
                     baseColor: Colors.grey.shade300,
                     highlightColor: Colors.grey.shade100,
                     child: Container(
-                      height: 50,
-                      width: 50,
+                      height: MediaQuery.of(context).size.height / 2,
+                      width: MediaQuery.of(context).size.width / 2,
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.all(
                           Radius.circular(10),
