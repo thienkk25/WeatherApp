@@ -1,6 +1,6 @@
 # Weather App
 
-A app Flutter about Weather 
+A cross-platform application Flutter about Weather 
 
 ## Getting Started
 
