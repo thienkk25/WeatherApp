@@ -1,0 +1,22 @@
+{
+  "appTitle": "Weather",
+  "loading": "Loading...",
+  "changeFont": "Change font",
+  "defaultFont": "Default font",
+  "changeLanguage": "Change language",
+  "vietnamese": "Vietnamese",
+  "english": "English",
+  "changeTheme": "Change theme",
+  "light": "Light",
+  "dark": "Dark",
+  "system": "System",
+  "humidity": "Humidity {value}%",
+  "weatherConditionClear": "Sunny",
+  "weatherConditionClouds": "Cloudy",
+  "weatherConditionRain": "Rain",
+  "weatherConditionThunderstorm": "Thunderstorm",
+  "weatherConditionDrizzle": "Drizzle",
+  "weatherConditionSnow": "Snow",
+  "weatherConditionMist": "Mist / Fog / Haze",
+  "temperature": "{value}°C"
+}

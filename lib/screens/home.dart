@@ -6,11 +6,23 @@ import 'package:geolocator/geolocator.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:weather_app/controllers/weather_contronller.dart';
+import '../l10n/app_localizations.dart';
 
 class Home extends StatefulWidget {
   final ValueChanged<bool> onFontChange;
+  final ValueChanged<ThemeMode> onThemeModeChange;
+  final ThemeMode currentThemeMode;
+  final ValueChanged<Locale> onLocaleChange;
+  final Locale currentLocale;
 
-  const Home({super.key, required this.onFontChange});
+  const Home({
+    super.key,
+    required this.onFontChange,
+    required this.onThemeModeChange,
+    required this.currentThemeMode,
+    required this.onLocaleChange,
+    required this.currentLocale,
+  });
 
   @override
   State<Home> createState() => _HomeState();
@@ -133,12 +145,13 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Weather"),
+        title: Text(AppLocalizations.of(context)?.appTitle ?? 'Weather'),
         centerTitle: true,
       ),
       drawer: Drawer(
           child: SafeArea(
         child: Column(
+          spacing: 10,
           children: [
             Padding(
               padding: const EdgeInsets.all(5.0),
@@ -191,7 +204,8 @@ class _HomeState extends State<Home> {
                     const SizedBox(
                       width: 10,
                     ),
-                    const Text("Đổi phông chữ"),
+                    Text(AppLocalizations.of(context)?.changeFont ??
+                        "Đổi phông chữ"),
                   ],
                 ),
               ),
@@ -222,12 +236,32 @@ class _HomeState extends State<Home> {
                     position: position,
                     items: [
                       PopupMenuItem(
-                        child: const Text("Vietnamese"),
-                        onTap: () {},
+                        child: Row(
+                          children: [
+                            Text(AppLocalizations.of(context)?.vietnamese ??
+                                "Vietnamese"),
+                            if (widget.currentLocale.languageCode == 'vi')
+                              const Icon(Icons.check,
+                                  color: Colors.blue, size: 18),
+                          ],
+                        ),
+                        onTap: () {
+                          widget.onLocaleChange(const Locale('vi'));
+                        },
                       ),
                       PopupMenuItem(
-                        child: const Text("English"),
-                        onTap: () {},
+                        child: Row(
+                          children: [
+                            Text(AppLocalizations.of(context)?.english ??
+                                "English"),
+                            if (widget.currentLocale.languageCode == 'en')
+                              const Icon(Icons.check,
+                                  color: Colors.blue, size: 18),
+                          ],
+                        ),
+                        onTap: () {
+                          widget.onLocaleChange(const Locale('en'));
+                        },
                       ),
                     ],
                   );
@@ -243,7 +277,8 @@ class _HomeState extends State<Home> {
                     const SizedBox(
                       width: 10,
                     ),
-                    const Text("Đổi ngôn ngữ"),
+                    Text(AppLocalizations.of(context)?.changeLanguage ??
+                        "Đổi ngôn ngữ"),
                   ],
                 ),
               ),
@@ -274,12 +309,44 @@ class _HomeState extends State<Home> {
                     position: position,
                     items: [
                       PopupMenuItem(
-                        child: const Text("Sáng"),
-                        onTap: () {},
+                        child: Row(
+                          children: [
+                            Text(AppLocalizations.of(context)?.light ?? "Sáng"),
+                            if (widget.currentThemeMode == ThemeMode.light)
+                              const Icon(Icons.check,
+                                  color: Colors.blue, size: 18),
+                          ],
+                        ),
+                        onTap: () {
+                          widget.onThemeModeChange(ThemeMode.light);
+                        },
                       ),
                       PopupMenuItem(
-                        child: const Text("Tối"),
-                        onTap: () {},
+                        child: Row(
+                          children: [
+                            Text(AppLocalizations.of(context)?.dark ?? "Tối"),
+                            if (widget.currentThemeMode == ThemeMode.dark)
+                              const Icon(Icons.check,
+                                  color: Colors.blue, size: 18),
+                          ],
+                        ),
+                        onTap: () {
+                          widget.onThemeModeChange(ThemeMode.dark);
+                        },
+                      ),
+                      PopupMenuItem(
+                        child: Row(
+                          children: [
+                            Text(AppLocalizations.of(context)?.system ??
+                                "Tự động"),
+                            if (widget.currentThemeMode == ThemeMode.system)
+                              const Icon(Icons.check,
+                                  color: Colors.blue, size: 18),
+                          ],
+                        ),
+                        onTap: () {
+                          widget.onThemeModeChange(ThemeMode.system);
+                        },
                       ),
                     ],
                   );
@@ -295,7 +362,8 @@ class _HomeState extends State<Home> {
                     const SizedBox(
                       width: 10,
                     ),
-                    const Text("Đổi giao diện"),
+                    Text(AppLocalizations.of(context)?.changeTheme ??
+                        "Đổi giao diện"),
                   ],
                 ),
               ),
@@ -304,126 +372,188 @@ class _HomeState extends State<Home> {
         ),
       )),
       body: SafeArea(
-        child: Column(
-          children: [
-            dataWeather != null
-                ? Center(
-                    child: Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(dataWeather!['name'].toString()),
-                            const SizedBox(
-                              width: 10,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  dataWeather != null
+                      ? Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24)),
+                          elevation: 10,
+                          shadowColor: Colors.blue.withValues(alpha: .17),
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.location_on_rounded,
+                                        color: Colors.blue.shade600, size: 28),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      dataWeather!["name"].toString(),
+                                      style: const TextStyle(
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                Lottie.asset(
+                                  getCustomWeatherIcon(
+                                      dataWeather!["weather"][0]["icon"]),
+                                  height: 200,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  AppLocalizations.of(context)?.temperature(
+                                          dataWeather!["main"]["temp"]
+                                              .toStringAsFixed(0)) ??
+                                      "${dataWeather!["main"]["temp"].toStringAsFixed(0)}°C",
+                                  style: TextStyle(
+                                    fontSize: 72,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blueGrey.shade900,
+                                    fontFamily: 'Borel',
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  getWeatherCondition(),
+                                  style: const TextStyle(
+                                      fontSize: 20, color: Colors.black54),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  AppLocalizations.of(context)?.humidity(
+                                          dataWeather!["main"]["humidity"]) ??
+                                      "Độ ẩm ${dataWeather!["main"]["humidity"]}%",
+                                  style: const TextStyle(
+                                      fontSize: 16, color: Colors.black87),
+                                ),
+                              ],
                             ),
-                            LottieBuilder.asset(
-                              "assets/lotties/location.json",
-                            ),
-                          ],
-                        ),
-                        Text("${dataWeather!['main']['temp'].round()} °C"),
-                        Text(
-                            "${getWeatherCondition()}, độ ẩm ${dataWeather!['main']['humidity']}%"),
-                        LottieBuilder.asset(
-                          getCustomWeatherIcon(
-                              dataWeather!['weather'][0]['icon']),
-                          height: 200,
-                          width: 200,
-                          fit: BoxFit.fill,
-                        ),
-                      ],
-                    ),
-                  )
-                : Center(
-                    child: Column(
-                      children: [
-                        Shimmer(
-                          gradient: LinearGradient(colors: [
-                            Colors.grey.shade300,
-                            Colors.grey.shade600
-                          ]),
-                          child: const Text("Loading..."),
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: Container(
-                            height: 14,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(50),
-                              ),
-                              color: Colors.grey.shade300,
+                          ),
+                        )
+                      : Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24)),
+                          elevation: 8,
+                          shadowColor: Colors.blue.withValues(alpha: .13),
+                          child: Padding(
+                            padding: const EdgeInsets.all(32),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Shimmer(
+                                  gradient: LinearGradient(colors: [
+                                    Colors.blue.shade100,
+                                    Colors.blue.shade200
+                                  ]),
+                                  child: Container(
+                                    height: 36,
+                                    width: 120,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(18),
+                                      color: Colors.blue.shade100,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Shimmer.fromColors(
+                                  baseColor: Colors.blue.shade100,
+                                  highlightColor: Colors.white,
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: Colors.blue.shade50,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                Shimmer.fromColors(
+                                  baseColor: Colors.blue.shade100,
+                                  highlightColor: Colors.white,
+                                  child: Container(
+                                    height: 28,
+                                    width: 80,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Colors.blue.shade100,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Shimmer.fromColors(
+                                  baseColor: Colors.blue.shade100,
+                                  highlightColor: Colors.white,
+                                  child: Container(
+                                    height: 18,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Colors.blue.shade100,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 10,
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
+                        elevation: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Lottie.asset("assets/lotties/fb.json",
+                              height: 36, width: 36),
                         ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: Container(
-                            height: 14,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(50),
-                              ),
-                              color: Colors.grey.shade300,
-                            ),
-                          ),
+                      ),
+                      const SizedBox(width: 16),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
+                        elevation: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Lottie.asset("assets/lotties/instagram.json",
+                              height: 36, width: 36),
                         ),
-                        const SizedBox(
-                          height: 10,
+                      ),
+                      const SizedBox(width: 16),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
+                        elevation: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Lottie.asset("assets/lotties/linkedin.json",
+                              height: 36, width: 36),
                         ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: Container(
-                            height: MediaQuery.of(context).size.height / 2,
-                            width: MediaQuery.of(context).size.width / 2,
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              color: Colors.grey.shade300,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                LottieBuilder.asset(
-                  "assets/lotties/fb.json",
-                  height: 30,
-                  width: 30,
-                  fit: BoxFit.fill,
-                ),
-                const SizedBox(width: 10),
-                LottieBuilder.asset(
-                  "assets/lotties/instagram.json",
-                  height: 30,
-                  width: 30,
-                  fit: BoxFit.fill,
-                ),
-                const SizedBox(width: 10),
-                LottieBuilder.asset(
-                  "assets/lotties/linkedin.json",
-                  height: 30,
-                  width: 30,
-                  fit: BoxFit.fill,
-                ),
-              ],
-            )
-          ],
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

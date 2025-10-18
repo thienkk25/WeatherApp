@@ -1,0 +1,22 @@
+{
+  "appTitle": "Thời tiết",
+  "loading": "Đang tải...",
+  "changeFont": "Đổi phông chữ",
+  "defaultFont": "Font mặc định",
+  "changeLanguage": "Đổi ngôn ngữ",
+  "vietnamese": "Tiếng Việt",
+  "english": "Tiếng Anh",
+  "changeTheme": "Đổi giao diện",
+  "light": "Sáng",
+  "dark": "Tối",
+  "system": "Tự động",
+  "humidity": "Độ ẩm {value}%",
+  "weatherConditionClear": "Nắng",
+  "weatherConditionClouds": "Nhiều mây",
+  "weatherConditionRain": "Mưa",
+  "weatherConditionThunderstorm": "Dông",
+  "weatherConditionDrizzle": "Mưa phùn",
+  "weatherConditionSnow": "Tuyết",
+  "weatherConditionMist": "Sương mù",
+  "temperature": "{value}°C"
+}
